@@ -19,14 +19,6 @@ export class Triangle extends Shape {
         return `${this.getTriangleType()} triangle`;
     }
 
-    private getSidesLength(): number[] {
-        return this.points.map((point, index) => {
-            return point.distance(
-                this.points[getNextItemIndex(this.points, index)]
-            );
-        });
-    }
-
     private getTriangleType() {
         const slidesLength = this.getSidesLength();
 
@@ -38,6 +30,14 @@ export class Triangle extends Shape {
             default:
                 return "scalene";
         }
+    }
+
+    private getSidesLength(): number[] {
+        return this.points.map((point, index) => {
+            return point.distance(
+                this.points[getNextItemIndex(this.points, index)]
+            );
+        });
     }
 
     toString(): string {
