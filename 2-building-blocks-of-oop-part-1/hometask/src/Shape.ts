@@ -1,4 +1,5 @@
 import { Point } from "./Point";
+import { getNextItemIndex } from "./utils/getNextItemIndex";
 
 export abstract class Shape {
     protected color: string;
@@ -25,8 +26,12 @@ export abstract class Shape {
 
     getPerimeter(): number {
         return this.points.reduce((acc, point, index) => {
-            const nextPointIndex = this.points[index + 1] ? index + 1 : 0;
-            return acc + point.distance(this.points[nextPointIndex]);
+            return (
+                acc +
+                point.distance(
+                    this.points[getNextItemIndex(this.points, index)]
+                )
+            );
         }, 0);
     }
 

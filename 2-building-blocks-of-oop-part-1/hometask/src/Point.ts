@@ -9,7 +9,9 @@ export class Point {
     }
 
     private getDistanceTo(x2: number, y2: number): number {
-        return Math.sqrt(Math.pow(x2 - this.x, 2) + Math.pow(y2 - this.y, 2));
+        const a = Number(Math.pow(x2 - this.x, 2).toFixed(2));
+        const b = Number(Math.pow(y2 - this.y, 2).toFixed(2));
+        return Math.sqrt(a + b);
     }
 
     distance(): number;
