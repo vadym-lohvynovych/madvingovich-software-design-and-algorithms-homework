@@ -1,18 +1,18 @@
 export interface Image {
-  userID: string
-  url: string
+  userID: string;
+  url: string;
 }
 
 export interface User {
-  userID: string
-  username: string
-  country: string
-  name: string
+  userID: string;
+  username: string;
+  country: string;
+  name: string;
 }
 
-interface Payment {
-  totalSum: number
-  date: string
+export interface Payment {
+  totalSum: number;
+  date: string;
 }
 
 export interface Account {

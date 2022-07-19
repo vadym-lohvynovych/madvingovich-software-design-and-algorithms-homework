@@ -1,39 +1,22 @@
-import { useState } from 'react';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
 
-import styles from './Search.module.scss';
+import styles from "./Search.module.scss";
 
 interface SearchProps {
-  store?: {};
-  updateStore?: (val) => void;
+  value: string;
+  onChange: (val: string) => void;
 }
 
-// OR
-
-//interface SearchProps {
-//  selected?: {};
-//  updateSelected?: (val) => void;
-//}
-
-// OR store can be global
-
 export function Search(props: SearchProps) {
-  const [searchedValue, setSearchedValue] = useState<string>('');
-
-  const onChange = (value) => {
-    console.log(value); // for debugging
-    setSearchedValue(value);
-  }
-
   return (
     <OutlinedInput
       className={styles.input}
       placeholder="Search by country/name/username"
-      value={searchedValue}
+      value={props.value}
       type="search"
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => props.onChange(e.target.value.toLowerCase())}
       startAdornment={
         <InputAdornment position="start">
           <SearchIcon />
