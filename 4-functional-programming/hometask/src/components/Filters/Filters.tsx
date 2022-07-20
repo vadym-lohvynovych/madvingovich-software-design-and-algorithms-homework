@@ -15,16 +15,17 @@ interface FiltersProps {
 }
 
 export function Filters(props: FiltersProps) {
+  const onChecked = (filter: Filter) => () => props.updateSelected(filter);
   return (
     <div className={styles.group}>
       <div className={styles.title}>Filter by posts</div>
       <ul className={styles.list}>
         {props.options.map((option) => (
-          <li value={option.title} onClick={() => props.updateSelected(option)} key={option.title}>
+          <li value={option.title} onClick={onChecked(option)} key={option.title}>
             <Checkbox
-              checked={!!props.selected.find((filter) => filter.title === option.title)}
+              checked={Boolean(props.selected.find((filter) => filter.title === option.title))}
               value={option.title}
-              onChange={() => props.updateSelected(option)}
+              onChange={onChecked(option)}
               size="small"
               color="primary"
             />{" "}

@@ -1,22 +1,23 @@
-import { Table as MuiTable } from '@mui/material';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import { Table as MuiTable } from "@mui/material";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
-import styles from './Table.module.scss'
+import styles from "./Table.module.scss";
 
 export interface Row {
-  avatar: string
-  username: string
-  country: string
-  name: string
-  lastPayments: number
-  posts: number
+  userID?: string;
+  avatar: string;
+  username: string;
+  country: string;
+  name: string;
+  lastPayments: number;
+  posts: number;
 }
 
 interface TableProps {
-  rows: Row[]
+  rows: Row[];
 }
 
 export function Table(props: TableProps) {
@@ -49,11 +50,7 @@ export function Table(props: TableProps) {
             {rows.map((row) => (
               <TableRow key={row.name}>
                 <TableCell align="left">
-                  <img
-                    className={styles.avatar}
-                    src={row.avatar}
-                    alt="avatar"
-                  />
+                  <img className={styles.avatar} src={row.avatar} alt="avatar" />
                 </TableCell>
                 <TableCell align="left">{row.username}</TableCell>
                 <TableCell align="left">{row.country}</TableCell>

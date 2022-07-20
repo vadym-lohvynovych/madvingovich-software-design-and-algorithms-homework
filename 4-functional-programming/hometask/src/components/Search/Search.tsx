@@ -1,6 +1,6 @@
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
+import InputAdornment from "@mui/material/InputAdornment";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 import styles from "./Search.module.scss";
 
@@ -16,7 +16,7 @@ export function Search(props: SearchProps) {
       placeholder="Search by country/name/username"
       value={props.value}
       type="search"
-      onChange={(e) => props.onChange(e.target.value.toLowerCase())}
+      onChange={(e) => props.onChange(e.target.value)}
       startAdornment={
         <InputAdornment position="start">
           <SearchIcon />

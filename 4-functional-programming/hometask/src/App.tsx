@@ -1,65 +1,28 @@
-import { useState, useEffect } from "react";
 import { StyledEngineProvider } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 
-import { Table, Filters, Sort, Search, Filter } from "./components";
-import { getImages, getUsers, getAccounts } from "./mocks/api";
+import { Filter, Filters, Search, Sort, Table } from "./components";
+import { getAccounts, getImages, getUsers } from "./mocks/api";
 
 import styles from "./App.module.scss";
 
-import type { Row } from "./components";
-import type { Image, User, Account } from "../types";
+import type { Account, Image, User } from "../types";
+import type { Row } from "./components/Table";
 
-import rows from "./mocks/rows.json";
 import { dataConverter } from "./utils/dataConverter";
 import { isRowVisible } from "./utils/isRowVisible";
+import { OPTIONS, rowSortFunctionsMapping } from "./constants";
 
-// mockedData has to be replaced with parsed Promises’ data
-const mockedData: Row[] = rows.data;
-
-export const OPTIONS = [
-  {
-    title: "Without posts",
-    filterFunc: (row: Row) => row.posts === 0,
-  },
-  {
-    title: "More than 100 posts",
-    filterFunc: (row: Row) => row.posts >= 100,
-  },
-];
-
-const sortFunctionsMapping = {
-  asc: (a: Row, b: Row) => a.username.localeCompare(b.username),
-  desc: (a: Row, b: Row) => b.username.localeCompare(a.username),
-};
+const mapTitle = (x: Filter) => x.title;
+const filterByTitle = (title: string) => (x: Filter) => x.title !== title;
 
 function App() {
   const [data, setData] = useState<Row[]>(undefined);
+  const [filteredData, setFilteredData] = useState<Row[]>([]);
+
   const [selectedFilters, setSelectedFilters] = useState<Filter[]>([]);
   const [sort, setSort] = useState<string>("");
   const [search, setSearch] = useState<string>("");
-
-  const [filteredData, setFilteredData] = useState<Row[]>([]);
-
-  useEffect(() => {
-    if (data) {
-      let filtered = data;
-      if (selectedFilters.length || search) {
-        filtered = data.filter(isRowVisible(selectedFilters, search));
-      }
-      if (sort) {
-        filtered = filtered.slice().sort(sortFunctionsMapping[sort]);
-      }
-      setFilteredData(filtered);
-    }
-  }, [data, selectedFilters, sort, search]);
-
-  const updateFilters = (selectedFilter: Filter) => {
-    if (selectedFilters.map((f) => f.title).includes(selectedFilter.title)) {
-      setSelectedFilters((sf) => sf.filter((f) => f.title !== selectedFilter.title));
-    } else {
-      setSelectedFilters((sf) => [...sf, selectedFilter]);
-    }
-  };
 
   useEffect(() => {
     // fetching data from API
@@ -69,6 +32,28 @@ function App() {
       }
     );
   }, []);
+
+  useEffect(() => {
+    // applying filters/sorting
+    if (data) {
+      let filtered = [...data];
+      if (selectedFilters.length || search.trim()) {
+        filtered = filtered.filter(isRowVisible(selectedFilters, search.trim()));
+      }
+      if (sort) {
+        filtered.sort(rowSortFunctionsMapping[sort]);
+      }
+      setFilteredData(filtered);
+    }
+  }, [data, selectedFilters, sort, search]);
+
+  const updateFilters = (selectedFilter: Filter) => {
+    if (selectedFilters.map(mapTitle).includes(selectedFilter.title)) {
+      setSelectedFilters((sf) => sf.filter(filterByTitle(selectedFilter.title)));
+    } else {
+      setSelectedFilters((sf) => [...sf, selectedFilter]);
+    }
+  };
 
   return (
     <StyledEngineProvider injectFirst>
@@ -80,7 +65,7 @@ function App() {
           </div>
           <Search value={search} onChange={setSearch} />
         </div>
-        <Table rows={filteredData.length ? filteredData : mockedData} />
+        <Table rows={filteredData} />
       </div>
     </StyledEngineProvider>
   );

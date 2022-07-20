@@ -1,14 +1,15 @@
 import { Filter } from "../components";
 import { Row } from "../components/Table";
 
-const isFinded = (row: Row, search: string) =>
-  row.username.toLowerCase().includes(search) ||
-  row.country.toLowerCase().includes(search) ||
-  row.name.toLowerCase().includes(search);
+const searchableKeys = ["username", "country", "name"];
 
-const isFiltered = (row: Row, filters: Filter[]) => {
-  return filters.some((filter) => filter.filterFunc(row));
-};
+const includesString = (value: string, str: string) => value.toLowerCase().includes(str.toLowerCase());
+
+const isFinded = (row: Row, search: string) => searchableKeys.some((key) => includesString(row[key], search));
+
+const rowFiltered = (row: Row) => (filter: Filter) => filter.filterFunc(row);
+
+const isFiltered = (row: Row, filters: Filter[]) => filters.some(rowFiltered(row));
 
 export const isRowVisible = (filters: Filter[], search: string) => (row: Row) => {
   let shoudBeVisible = false;
