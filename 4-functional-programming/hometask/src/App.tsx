@@ -1,41 +1,71 @@
-import { useState, useEffect } from 'react';
-import { StyledEngineProvider } from '@mui/material/styles';
+import { StyledEngineProvider } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 
-import { Table, Filters, Sort, Search } from './components';
-import { getImages, getUsers, getAccounts } from './mocks/api';
+import { Filter, Filters, Search, Sort, Table } from "./components";
+import { getAccounts, getImages, getUsers } from "./mocks/api";
 
-import styles from './App.module.scss';
+import styles from "./App.module.scss";
 
-import type { Row } from './components';
-import type { Image, User, Account } from '../types';
+import type { Account, Image, User } from "../types";
+import type { Row } from "./components/Table";
 
-import rows from './mocks/rows.json';
+import { dataConverter } from "./utils/dataConverter";
+import { isRowVisible } from "./utils/isRowVisible";
+import { OPTIONS, rowSortFunctionsMapping } from "./constants";
 
-// mockedData has to be replaced with parsed Promises’ data
-const mockedData: Row[] = rows.data;
+const mapTitle = (x: Filter) => x.title;
+const filterByTitle = (title: string) => (x: Filter) => x.title !== title;
 
 function App() {
   const [data, setData] = useState<Row[]>(undefined);
+  const [filteredData, setFilteredData] = useState<Row[]>([]);
+
+  const [selectedFilters, setSelectedFilters] = useState<Filter[]>([]);
+  const [sort, setSort] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     // fetching data from API
-    Promise.all([getImages(), getUsers(), getAccounts()]).then(
-      ([images, users, accounts]: [Image[], User[], Account[]]) =>
-        console.log(images, users, accounts)
+    Promise.all([getUsers(), getImages(), getAccounts()]).then(
+      ([users, images, accounts]: [User[], Image[], Account[]]) => {
+        setData(dataConverter(users, accounts, images));
+      }
     );
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    // applying filters/sorting
+    if (data) {
+      let filtered = [...data];
+      if (selectedFilters.length || search.trim()) {
+        filtered = filtered.filter(isRowVisible(selectedFilters, search.trim()));
+      }
+      if (sort) {
+        filtered.sort(rowSortFunctionsMapping[sort]);
+      }
+      setFilteredData(filtered);
+    }
+  }, [data, selectedFilters, sort, search]);
+
+  const updateFilters = (selectedFilter: Filter) => {
+    if (selectedFilters.map(mapTitle).includes(selectedFilter.title)) {
+      setSelectedFilters((sf) => sf.filter(filterByTitle(selectedFilter.title)));
+    } else {
+      setSelectedFilters((sf) => [...sf, selectedFilter]);
+    }
+  };
 
   return (
     <StyledEngineProvider injectFirst>
       <div className="App">
         <div className={styles.container}>
           <div className={styles.sortFilterContainer}>
-            <Filters />
-            <Sort />
+            <Filters options={OPTIONS} selected={selectedFilters} updateSelected={updateFilters} />
+            <Sort selected={sort} updateSelected={setSort} />
           </div>
-          <Search />
+          <Search value={search} onChange={setSearch} />
         </div>
-        <Table rows={data || mockedData} />
+        <Table rows={filteredData} />
       </div>
     </StyledEngineProvider>
   );

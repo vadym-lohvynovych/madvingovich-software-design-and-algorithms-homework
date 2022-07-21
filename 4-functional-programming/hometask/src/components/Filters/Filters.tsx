@@ -1,66 +1,34 @@
-import { useState } from 'react';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox from "@mui/material/Checkbox";
+import { Row } from "../Table";
 
-import styles from './Filters.module.scss';
+import styles from "./Filters.module.scss";
 
-interface FiltersProps {
-  store?: {};
-  updateStore?: (val) => void;
+export interface Filter {
+  title: string;
+  filterFunc: (row: Row) => boolean;
 }
 
-// OR
-
-//interface FiltersProps {
-//  selected?: {};
-//  updateSelected?: (val) => void;
-//}
-
-// OR store can be global
-
-const OPTIONS = [
-  {
-    title: 'Without posts',
-  },
-  {
-    title: 'More than 100 posts',
-  },
-];
+interface FiltersProps {
+  selected: Filter[];
+  updateSelected: (val: Filter) => void;
+  options: Filter[];
+}
 
 export function Filters(props: FiltersProps) {
-  const [selectedFilter, setSelectedFilter] = useState<string[]>([]);
-
-  const onChange = ({ title }) => {
-    console.log(title); // for debugging
-
-    let updatedFilters;
-    if (selectedFilter.find((filter) => filter === title)) {
-      updatedFilters = selectedFilter.filter(
-        (filter) => filter !== title
-      );
-    } else {
-      updatedFilters = [...selectedFilter, title];
-    }
-
-    setSelectedFilter(updatedFilters);
-  };
-
+  const onChecked = (filter: Filter) => () => props.updateSelected(filter);
   return (
     <div className={styles.group}>
       <div className={styles.title}>Filter by posts</div>
       <ul className={styles.list}>
-        {OPTIONS.map((option) => (
-          <li
-            value={option.title}
-            onClick={() => onChange(option)}
-            key={option.title}
-          >
+        {props.options.map((option) => (
+          <li value={option.title} onClick={onChecked(option)} key={option.title}>
             <Checkbox
-              checked={!!selectedFilter.find(filter => filter === option.title)}
+              checked={Boolean(props.selected.find((filter) => filter.title === option.title))}
               value={option.title}
-              onChange={() => onChange(option)}
+              onChange={onChecked(option)}
               size="small"
               color="primary"
-            />{' '}
+            />{" "}
             {option.title}
           </li>
         ))}
