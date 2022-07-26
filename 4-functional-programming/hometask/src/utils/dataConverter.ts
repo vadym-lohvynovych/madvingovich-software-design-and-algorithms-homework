@@ -10,7 +10,6 @@ export const dataConverter = (users: User[], accounts: Account[], images: Image[
     const { url: avatar } = images.find(findByUserId(userID));
     const { posts, payments = [] } = accounts.find(findByUserId(userID));
     return {
-      userID,
       username,
       country,
       name,

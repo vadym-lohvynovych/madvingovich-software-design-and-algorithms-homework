@@ -7,7 +7,6 @@ import TableRow from "@mui/material/TableRow";
 import styles from "./Table.module.scss";
 
 export interface Row {
-  userID?: string;
   avatar: string;
   username: string;
   country: string;
