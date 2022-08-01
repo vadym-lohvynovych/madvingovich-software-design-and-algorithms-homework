@@ -1,5 +1,5 @@
 import { StyledEngineProvider } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Filter, Filters, Search, Sort, Table } from "./components";
 import { getAccounts, getImages, getUsers } from "./mocks/api";
@@ -24,6 +24,8 @@ function App() {
   const [sort, setSort] = useState<string>("");
   const [search, setSearch] = useState<string>("");
 
+  const sortData = useCallback((a: Row, b: Row) => (sort ? rowSortFunctionsMapping[sort](a, b) : 0), [sort]);
+
   useEffect(() => {
     // fetching data from API
     Promise.all([getUsers(), getImages(), getAccounts()]).then(
@@ -36,16 +38,9 @@ function App() {
   useEffect(() => {
     // applying filters/sorting
     if (data) {
-      let filtered = [...data];
-      if (selectedFilters.length || search.trim()) {
-        filtered = filtered.filter(isRowVisible(selectedFilters, search.trim()));
-      }
-      if (sort) {
-        filtered.sort(rowSortFunctionsMapping[sort]);
-      }
-      setFilteredData(filtered);
+      setFilteredData(data.filter(isRowVisible(selectedFilters, search)).sort(sortData));
     }
-  }, [data, selectedFilters, sort, search]);
+  }, [data, selectedFilters, search, sortData]);
 
   const updateFilters = (selectedFilter: Filter) => {
     if (selectedFilters.map(mapTitle).includes(selectedFilter.title)) {

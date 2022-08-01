@@ -7,17 +7,12 @@ const includesString = (value: string, str: string) => value.toLowerCase().inclu
 
 const isFinded = (row: Row, search: string) => searchableKeys.some((key) => includesString(row[key], search));
 
-const rowFiltered = (row: Row) => (filter: Filter) => filter.filterFunc(row);
-
-const isFiltered = (row: Row, filters: Filter[]) => filters.some(rowFiltered(row));
+const isRowFiltered = (row: Row, filters: Filter[]) => filters.some((filter: Filter) => filter.filterFunc(row));
 
 export const isRowVisible = (filters: Filter[], search: string) => (row: Row) => {
-  let shoudBeVisible = false;
-  if (search && isFinded(row, search)) {
-    shoudBeVisible = true;
-  }
-  if (filters.length && isFiltered(row, filters)) {
-    shoudBeVisible = true;
-  }
-  return shoudBeVisible;
+  const noFilters = !filters.length && !search;
+  const filtered = filters.length && isRowFiltered(row, filters);
+  const finded = Boolean(search.trim()) && isFinded(row, search);
+
+  return noFilters || filtered || finded ? true : false;
 };
