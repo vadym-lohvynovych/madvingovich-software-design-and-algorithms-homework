@@ -1,17 +1,17 @@
 import { Client } from "./Client";
-import { Shipment } from "./Shipment";
+import { createShipment } from "./Shipment/ShipmentFactory";
 import { getShipper } from "./utils/getShipper";
 
 const client = new Client();
 
-const weight = 14;
+const weight = 17;
 const fromAddress = "from address";
 const toAddress = "to address";
-const fromZipCode = 34100;
+const fromZipCode = 84100;
 const toZipCode = 54100;
 
-const shiper = getShipper(fromZipCode);
+const shipment = createShipment(0, weight, fromAddress, fromZipCode, toAddress, toZipCode);
 
-const shipment = new Shipment(0, weight, fromAddress, fromZipCode, toAddress, toZipCode, shiper);
+console.log(shipment);
 
 client.handle(shipment);

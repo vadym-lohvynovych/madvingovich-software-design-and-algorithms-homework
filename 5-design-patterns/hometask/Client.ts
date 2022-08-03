@@ -1,4 +1,4 @@
-import { Shipment } from "./Shipment";
+import { Shipment } from "./Shipment/Shipment";
 
 export class Client {
   handle(shipment: Shipment) {

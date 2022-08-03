@@ -1,7 +1,7 @@
-import { Shipper } from "./Shipper/Shipper";
-import { getUniqueId } from "./utils/uniqueIdService";
+import { Shipper } from "../Shipper/Shipper";
+import { getUniqueId } from "../utils/uniqueIdService";
 
-export class Shipment {
+export abstract class Shipment {
   shipmentId: number;
   weight: number;
   fromAddress: string;
@@ -9,6 +9,8 @@ export class Shipment {
   toAddress: string;
   toZipCode: number;
   shipper: Shipper;
+
+  abstract getCost(weight: number): number;
 
   constructor(
     shipmentId: number,
@@ -29,14 +31,10 @@ export class Shipment {
   }
 
   ship(): string {
-    return `${this.shipmentId}. From: ${this.fromAddress}. To: ${this.toAddress}. Cost: ${this.getCost()}$.`;
+    return `${this.shipmentId}. From: ${this.fromAddress}. To: ${this.toAddress}. Cost: ${this.getCost(this.weight)}$.`;
   }
 
   getShipmentId(shipmentId: number): number {
     return shipmentId === 0 ? getUniqueId() : shipmentId;
-  }
-
-  getCost(): number {
-    return this.shipper.getCost(this.weight);
   }
 }
