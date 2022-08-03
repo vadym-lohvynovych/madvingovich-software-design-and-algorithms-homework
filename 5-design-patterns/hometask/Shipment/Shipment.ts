@@ -1,7 +1,20 @@
 import { Shipper } from "../Shipper/Shipper";
 import { getUniqueId } from "../utils/uniqueIdService";
 
-export abstract class Shipment {
+export interface IShipment {
+  shipmentId: number;
+  weight: number;
+  fromAddress: string;
+  fromZipCode: number;
+  toAddress: string;
+  toZipCode: number;
+  shipper: Shipper;
+  ship(): string;
+  getCost(weight: number): number;
+  getShipmentId(shipmentId: number): number;
+}
+
+export abstract class Shipment implements IShipment {
   shipmentId: number;
   weight: number;
   fromAddress: string;
@@ -31,7 +44,9 @@ export abstract class Shipment {
   }
 
   ship(): string {
-    return `${this.shipmentId}. From: ${this.fromAddress}. To: ${this.toAddress}. Cost: ${this.getCost(this.weight)}$.`;
+    return `Shipment with the ID ${this.shipmentId} will be picked up from ${this.fromZipCode} ${
+      this.fromAddress
+    } and shipped to ${this.toZipCode} ${this.toAddress}, Cost = ${this.getCost(this.weight)}`;
   }
 
   getShipmentId(shipmentId: number): number {

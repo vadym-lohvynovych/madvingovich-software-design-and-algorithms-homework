@@ -1,7 +1,7 @@
-import { Shipment } from "./Shipment/Shipment";
+import { IShipment } from "./Shipment/Shipment";
 
 export class Client {
-  handle(shipment: Shipment) {
+  handle(shipment: IShipment) {
     const result = shipment.ship();
     console.log(result);
   }

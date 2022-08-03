@@ -1,5 +1,6 @@
 import { getShipmentClass, getShipmentType } from "../utils/getShipmentType";
 import { getShipper } from "../utils/getShipper";
+import { Shipment } from "./Shipment";
 
 export const createShipment = (
   shipmentId: number,
@@ -8,7 +9,7 @@ export const createShipment = (
   fromZipCode: number,
   toAddress: string,
   toZipCode: number
-) => {
+): Shipment => {
   const shipper = getShipper(fromZipCode);
   const ShipmentClass = getShipmentClass(getShipmentType(weight));
 

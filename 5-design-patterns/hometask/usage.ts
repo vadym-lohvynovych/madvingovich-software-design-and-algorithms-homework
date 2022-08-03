@@ -1,6 +1,8 @@
 import { Client } from "./Client";
+import { DoNotLeaveShipmentDecorator } from "./Shipment/DoNotLeaveShipmentDecorator";
+import { FragileShipmentDecorator } from "./Shipment/FragileShipmentDecorator";
+import { ReturnReceiptRequestedShipmentDecorator } from "./Shipment/ReturnReceiptRequestedShipmentDecorator";
 import { createShipment } from "./Shipment/ShipmentFactory";
-import { getShipper } from "./utils/getShipper";
 
 const client = new Client();
 
@@ -12,6 +14,10 @@ const toZipCode = 54100;
 
 const shipment = createShipment(0, weight, fromAddress, fromZipCode, toAddress, toZipCode);
 
-console.log(shipment);
+const fragileShipment = new FragileShipmentDecorator(shipment);
+const doNotLeaveFragileShipment = new DoNotLeaveShipmentDecorator(fragileShipment);
+const returnReceiptRequestedDoNotLeaveFragileShipment = new ReturnReceiptRequestedShipmentDecorator(
+  doNotLeaveFragileShipment
+);
 
-client.handle(shipment);
+client.handle(returnReceiptRequestedDoNotLeaveFragileShipment);

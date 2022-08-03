@@ -23,6 +23,6 @@ export const shipmentTypeToClassMapping = {
   [OVERSIZED]: Oversized,
 };
 
-export const getShipmentClass = (shipmentType: string) => {
+export const getShipmentClass = (shipmentType: keyof typeof shipmentTypeToClassMapping) => {
   return shipmentTypeToClassMapping[shipmentType];
 };
