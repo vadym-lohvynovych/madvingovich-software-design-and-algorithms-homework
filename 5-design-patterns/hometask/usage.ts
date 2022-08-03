@@ -14,10 +14,11 @@ const toZipCode = 54100;
 
 const shipment = createShipment(0, weight, fromAddress, fromZipCode, toAddress, toZipCode);
 
-const fragileShipment = new FragileShipmentDecorator(shipment);
-const doNotLeaveFragileShipment = new DoNotLeaveShipmentDecorator(fragileShipment);
-const returnReceiptRequestedDoNotLeaveFragileShipment = new ReturnReceiptRequestedShipmentDecorator(
-  doNotLeaveFragileShipment
-);
+const fragileShipment = client.makeShipmentFragile(shipment);
+
+const doNotLeaveFragileShipment = client.makeShipmentDoNotLeave(fragileShipment);
+
+const returnReceiptRequestedDoNotLeaveFragileShipment =
+  client.makeShipmentReturnReceiptRequested(doNotLeaveFragileShipment);
 
 client.handle(returnReceiptRequestedDoNotLeaveFragileShipment);
