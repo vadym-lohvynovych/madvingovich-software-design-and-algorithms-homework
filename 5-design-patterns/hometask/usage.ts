@@ -1,7 +1,4 @@
 import { Client } from "./Client";
-import { DoNotLeaveShipmentDecorator } from "./Shipment/DoNotLeaveShipmentDecorator";
-import { FragileShipmentDecorator } from "./Shipment/FragileShipmentDecorator";
-import { ReturnReceiptRequestedShipmentDecorator } from "./Shipment/ReturnReceiptRequestedShipmentDecorator";
 import { createShipment } from "./Shipment/ShipmentFactory";
 
 const client = new Client();
