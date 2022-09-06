@@ -32,7 +32,7 @@ export class MaxHeap {
   updateByIndex(index: number, newValue: number) {
     const old = this.heap[index];
     this.heap[index] = newValue;
-    if (newValue < old) {
+    if (newValue > old) {
       this.siftUp(index);
     } else {
       this.siftDown(index);
@@ -48,11 +48,11 @@ export class MaxHeap {
 
   private siftUp(index: number) {
     let i = index;
-    let parent = (i - 1) / 2;
-    while (i !== 0 && this.heap[i] < this.heap[parent]) {
+    let parent = Math.floor((i - 1) / 2);
+    while (i !== 0 && this.heap[i] > this.heap[parent]) {
       [this.heap[parent], this.heap[i]] = [this.heap[i], this.heap[parent]];
       i = parent;
-      parent = (i - 1) / 2;
+      parent = Math.floor((i - 1) / 2);
     }
   }
 

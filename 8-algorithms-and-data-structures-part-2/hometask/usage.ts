@@ -44,4 +44,6 @@ console.log("-->queue", maxPriorityQueue);
 
 console.log("-->max", maxPriorityQueue.max());
 console.log("-->extract max", maxPriorityQueue.extractMax());
+maxPriorityQueue.increaseKey(1, 44);
+maxPriorityQueue.insert({ data: "new", key: 599 });
 console.log("-->result", maxPriorityQueue);

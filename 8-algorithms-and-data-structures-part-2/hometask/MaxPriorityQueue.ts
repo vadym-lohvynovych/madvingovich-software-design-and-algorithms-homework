@@ -14,8 +14,9 @@ export class MaxPriorityQueue {
     this.queue = new MaxHeap(arr.map((x) => x.key));
   }
 
-  insert(el: number) {
-    this.queue.insert(el);
+  insert(queueItem: QueueItem) {
+    this.data.push(queueItem);
+    this.queue.insert(queueItem.key);
   }
 
   max(): QueueItem | null {
@@ -33,8 +34,14 @@ export class MaxPriorityQueue {
     return maxQueueItem;
   }
 
-  increaseKey(oldValue: number, newValue: number) {
-    this.queue.update(oldValue, newValue);
+  increaseKey(oldKey: number, newKey: number) {
+    if (oldKey < newKey) {
+      const queueItem = this.data.find((x) => x.key === oldKey);
+      if (queueItem) {
+        queueItem.key = newKey;
+        this.queue.update(oldKey, newKey);
+      }
+    }
   }
 
   private getDataItem(key: number | null): QueueItem | null {
